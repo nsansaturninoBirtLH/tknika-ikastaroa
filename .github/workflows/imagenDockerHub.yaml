@@ -5,7 +5,7 @@ name: cd-docker-hub
 on:
     push:
         branches:
-            - tarea8
+            - main
 
 jobs:
     cd-docker-hub:
