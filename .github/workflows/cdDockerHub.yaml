@@ -7,7 +7,7 @@ name: CD
 on: 
   push:
     branches:
-      - tarea8
+      - main
 
 jobs:
   continous-deployment:
