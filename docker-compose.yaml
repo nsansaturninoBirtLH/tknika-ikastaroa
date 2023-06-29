@@ -1,28 +1,43 @@
-version: '3.3'
+  # Contenedor para la aplicación de Java. Se genera a partir de la imagen de docker hub, pasándole los valores de las variables de entorno
+  # Se utiliza el fichero .env para almacenar algunos valores sensible
+version:  '3.8'
+
 services:
-  app:
+  java_app:
     image: nsansaturnino/java-app
+
+    container_name: appjava
+
+    restart: always
+
     environment:
-      DBHOST: 'db'
-      DBPASS: 'password'
-      DBUSER: 'user'
-      DBNAME: 'db'
+      - DBHOST=database
+      - DBPASS=$DBPASSADMIN
+      - DBUSER=$DBUSERADMIN
+      - DBPORT=3306
+      - DBNAME=database1
+
     ports:
-      - '8080:8080'
-  db:
+      - 8000:8080
+
+    depends_on:
+      - database
+
+  # Contenedor para la BBDD. Se genera a partir de la imagen de mysql en docker hub
+  # Se crea un vólumen en la máquina local para guardar y recuperar los datos si el servicio cae
+  database:
     image: mysql:5.7
+    container_name: basededatos
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
-      MYSQL_USER: 'user'
-      # You can use whatever password you like
-      MYSQL_PASSWORD: 'password'
-      # Password for root access
-      MYSQL_ROOT_PASSWORD: 'password'
-      # Where our data will be persisted
+      - MYSQL_ROOT_PASSWORD=$DBPASSADMIN
+      - MYSQL_DATABASE=database1
+      - MYSQL_USER=$DBUSER
+      - MYSQL_PASSWORD=$DBPASS
     volumes:
-      - my-db:/var/lib/mysql
-# Names our volume
+      - db_data:/var/lib/mysql
+    expose:
+      - 3306
+
 volumes:
-  my-db:
+  db_data:
