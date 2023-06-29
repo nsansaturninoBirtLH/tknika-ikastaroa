@@ -12,8 +12,8 @@ services:
 
     environment:
       - DBHOST=database
-      - DBPASS=$DBPASSADMIN
-      - DBUSER=$DBUSERADMIN
+      - DBPASS=root
+      - DBUSER=root
       - DBPORT=3306
       - DBNAME=database1
 
@@ -30,10 +30,10 @@ services:
     container_name: basededatos
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=$DBPASSADMIN
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=database1
-      - MYSQL_USER=$DBUSER
-      - MYSQL_PASSWORD=$DBPASS
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
     volumes:
       - db_data:/var/lib/mysql
     expose:
