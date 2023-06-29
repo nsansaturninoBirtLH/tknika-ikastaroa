@@ -1,3 +1,5 @@
+# Crea el jar a partir del repositorio y la imagen docker a partir del dockerfile
+# Se conecta a docker hub con las claves almacenadas en github como secrets
 name: cd-docker-hub
 
 on:
