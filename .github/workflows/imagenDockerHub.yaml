@@ -1,0 +1,33 @@
+name: cd-docker-hub
+
+on:
+    push:
+        branches:
+            - main
+
+
+jobs:
+    cd-docker-hub:
+      runs-on: ubuntu-latest  # imagen para el contenedor. Incluye JDK para compilar
+      steps:
+        - uses: actions/checkout@v3   # Copia el contenido del repositorio al contenedor
+
+        - name: Set env
+          run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV    # Crea la variable emv.RELEASE_VERSION con el nombre de la rama
+
+        - name: Maven Package without test    # Compila y crea el .jar del proyecto, sin tener en cuenta los tests
+          run: mvn package -DskipTests
+
+        - name: Login to DockerHub            # Se logea en docker hub con los secretos configurados en el repositorio de github
+          uses: docker/login-action@v2
+          with:   # usuario y contraseña de docker hub
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{secrets.DOCKERHUB_PASSWORD}}
+
+        - name: Build and push                # Crea la imagen a partir del dockerfile del proyecto y lo sube al docker hub del usuario
+          id: docker_build
+          uses: docker/build-push-action@v4
+          with:
+            context: .                        # No olvidar indicar el context para que no falle
+            push: true
+            tags: ${{secrets.DOCKERHUB_USERNAME}}/java-app:${{ env.RELEASE_VERSION }}, ${{secrets.DOCKERHUB_USERNAME}}/java-app:latest
