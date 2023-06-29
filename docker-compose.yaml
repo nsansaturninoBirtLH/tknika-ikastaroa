@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   app:
-    image: <TU-IMAGEN>
+    image: nsansaturnino/java-app
     environment:
       DBHOST: 'db'
       DBPASS: 'password'
